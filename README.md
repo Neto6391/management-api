@@ -1,1 +1,1 @@
-# managment-api
+# management-api
