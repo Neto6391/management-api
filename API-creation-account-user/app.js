@@ -6,8 +6,8 @@ import logger from "morgan";
 import Cryptr from "cryptr";
 
 //Import routes
-import indexRouter from "./routes/index";
-import usersRouter from "./routes/users";
+import accountRouter from "./routes/accountRouter";
+import usersRouter from "./routes/usersRouter";
 
 //Import Models
 import AccountModel from "./models/accountModel";
@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use("/accounts", accountRouter);
 app.use("/users", usersRouter);
 
 export default app;
