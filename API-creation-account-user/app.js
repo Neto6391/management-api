@@ -7,7 +7,6 @@ import Cryptr from "cryptr";
 
 //Import routes
 import accountRouter from "./routes/accountRouter";
-import usersRouter from "./routes/usersRouter";
 
 //Import Models
 import AccountModel from "./models/accountModel";
@@ -41,6 +40,5 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/accounts", accountRouter);
-app.use("/users", usersRouter);
 
 export default app;
