@@ -78,9 +78,10 @@ accountRouter
 						req.body.password = password;
 
 						let account = new AccountModel(req.body);
-
 						account.save(err => {
 							if (err) {
+								account._id = account._id - 1;
+								console.log(" ID -> " + account._id);
 								console.error(err);
 								res.statusMessage = "Bad Request";
 								res.status(400).json({

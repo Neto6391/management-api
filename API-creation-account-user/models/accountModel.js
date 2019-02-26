@@ -3,7 +3,6 @@ import mongooseSequence from "mongoose-sequence";
 
 const Schema = mongoose.Schema;
 const autoIncrement = mongooseSequence(mongoose);
-
 const accountModel = new Schema(
 	{
 		_id: Number,

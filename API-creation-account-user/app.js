@@ -29,8 +29,11 @@ dataAccount.password = password;
 let account = new AccountModel(dataAccount);
 
 account.save(err => {
-	if (err) console.error("Error: " + err);
-	console.log("Account test@test.com created with success!");
+	if (err) {
+		console.error("Error: " + err);
+	} else {
+		console.log("Account test@test.com created with success!");
+	}
 });
 
 app.use(logger("dev"));
