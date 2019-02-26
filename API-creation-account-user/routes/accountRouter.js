@@ -149,7 +149,8 @@ accountRouter.use("/:id", (req, res, next) => {
 					});
 				} else if (decoded) {
 					AccountModel.findById(req.params.id, (err, account) => {
-						if (err) {
+						if (err || !account) {
+							console.error(err);
 							res.statusMessage = "Not Found";
 							res.status(404).json({
 								Code: "4",
@@ -180,7 +181,12 @@ accountRouter.use("/:id", (req, res, next) => {
 
 accountRouter
 	.route("/:id")
-	.get((req, res) => {})
+	.get((req, res) => {
+		res.statusMessage = "OK";
+		let accountAux = account.toObject();
+		delete accountAux["password"];
+		res.status(200).json(accountAux);
+	})
 	.put((req, res) => {})
 	.delete((req, res) => {});
 
