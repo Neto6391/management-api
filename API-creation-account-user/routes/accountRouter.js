@@ -187,7 +187,31 @@ accountRouter
 		delete accountAux["password"];
 		res.status(200).json(accountAux);
 	})
-	.put((req, res) => {})
+	.put((req, res) => {
+		let password = securePassword.encrypt(req.body.password);
+		req.account.password = password;
+
+		req.account.firstName = req.body.firstName;
+		req.account.lastName = req.body.lastName;
+		req.account.email = req.body.email;
+		req.account.dateBirth = req.body.dateBirth;
+		req.account.phoneNumber = req.body.phoneNumber;
+		req.account.gender = req.body.gender;
+
+		req.account.save(err => {
+			if (err) {
+				console.error(err);
+				res.statusMessage = "Bad Request";
+				res.status(400).json({
+					Code: "3",
+					message: "Data Request Was Sent Incorrect!"
+				});
+			}
+
+			res.statusMessage = "Accept";
+			res.status(202).json("");
+		});
+	})
 	.delete((req, res) => {});
 
 export default accountRouter;
