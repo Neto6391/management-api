@@ -38,9 +38,10 @@ accountRouter
 										Code: "3",
 										message: "Data Request Was Sent Incorrect!"
 									});
+								} else {
+									res.statusMessage = "OK";
+									res.status(200).json(account);
 								}
-								res.statusMessage = "OK";
-								res.status(200).json(account);
 							}
 						);
 					}
@@ -86,36 +87,13 @@ accountRouter
 									Code: "3",
 									message: "Data Request Was Sent Incorrect!"
 								});
+							} else {
+								res.statusMessage = "Create";
+								let accountAux = account.toObject();
+								delete accountAux["password"];
+								res.status(201).json(accountAux);
 							}
-
-							res.statusMessage = "CREATE";
-							let accountAux = account.toObject();
-							delete accountAux["password"];
-							res.status(201).json(accountAux);
 						});
-
-						AccountModel.find(
-							{},
-							{
-								firstName: 1,
-								lastName: 1,
-								email: 1,
-								phoneNumber: 1,
-								dateBirth: 1,
-								gender: 1
-							},
-							(err, account) => {
-								if (err) {
-									res.statusMessage = "Bad Request";
-									res.status(400).json({
-										Code: "3",
-										message: "Data Request Was Sent Incorrect!"
-									});
-								}
-								res.statusMessage = "OK";
-								res.status(200).json(account);
-							}
-						);
 					}
 				});
 			} else {
@@ -156,9 +134,10 @@ accountRouter.use("/:id", (req, res, next) => {
 								Code: "4",
 								message: `Resource ${req.params.id} Not Found!`
 							});
+						} else {
+							req.account = account;
+							next();
 						}
-						req.account = account;
-						next();
 					});
 				}
 			});
@@ -183,7 +162,7 @@ accountRouter
 	.route("/:id")
 	.get((req, res) => {
 		res.statusMessage = "OK";
-		let accountAux = account.toObject();
+		let accountAux = req.account.toObject();
 		delete accountAux["password"];
 		res.status(200).json(accountAux);
 	})
@@ -206,12 +185,26 @@ accountRouter
 					Code: "3",
 					message: "Data Request Was Sent Incorrect!"
 				});
+			} else {
+				res.statusMessage = "Accept";
+				res.status(202).json("");
 			}
-
-			res.statusMessage = "Accept";
-			res.status(202).json("");
 		});
 	})
-	.delete((req, res) => {});
+	.delete((req, res) => {
+		req.account.remove(err => {
+			if (err) {
+				console.error(err);
+				res.statusMessage = "Bad Request";
+				res.status(400).json({
+					Code: "3",
+					message: "Data Request Was Sent Incorrect!"
+				});
+			} else {
+				res.statusMessage = "Not Content";
+				res.status(204).json("");
+			}
+		});
+	});
 
 export default accountRouter;

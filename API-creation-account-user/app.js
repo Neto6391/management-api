@@ -17,7 +17,7 @@ import dataAccount from "./data/account.json";
 const app = express();
 
 //Connection MongoDB
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "Error of Connection"));
