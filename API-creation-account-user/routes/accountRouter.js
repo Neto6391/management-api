@@ -137,7 +137,45 @@ accountRouter
 
 //This Function is for use of validations of Token and Auth
 accountRouter.use("/:id", (req, res, next) => {
-	next();
+	try {
+		let token = req.headers["token"];
+		if (token) {
+			jwt.verify(token, process.env.SECRET, (err, decoded) => {
+				if (err) {
+					res.statusMessage = "Unauthorized";
+					res.status(401).json({
+						Code: "2",
+						message: "Invalid Token, Inexistent or Expired!"
+					});
+				} else if (decoded) {
+					AccountModel.findById(req.params.id, (err, account) => {
+						if (err) {
+							res.statusMessage = "Not Found";
+							res.status(404).json({
+								Code: "4",
+								message: `Resource ${req.params.id} Not Found!`
+							});
+						}
+						req.account = account;
+						next();
+					});
+				}
+			});
+		} else {
+			res.statusMessage = "Unauthorized";
+			res.status(401).json({
+				Code: "2",
+				message: "Invalid Token, Inexistent or Expired!"
+			});
+		}
+	} catch (error) {
+		console.error(error);
+		res.statusMessage = "Internal error";
+		res.status(500).json({
+			Code: "1",
+			message: "Error in Server!"
+		});
+	}
 });
 
 accountRouter
